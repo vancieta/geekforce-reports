@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeekForce USA Weekly Report – May 4–10, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f1a;
+    --bg2: #16162a;
+    --bg3: #1e1e35;
+    --bg4: #252540;
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-dim: rgba(124,58,237,0.15);
+    --emerald: #10b981;
+    --emerald-dim: rgba(16,185,129,0.15);
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --blue: #3b82f6;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --border: rgba(255,255,255,0.07);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+  /* ── TOP BANNER ── */
+  .top-banner {
+    background: linear-gradient(135deg, #1a0a3d 0%, #0f0f1a 40%, #0a1f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 32px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+  .banner-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .logo-block { display: flex; align-items: center; gap: 14px; }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--purple), #a21caf);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+  }
+  .logo-text h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
+  .logo-text span { font-size: 0.78rem; color: var(--text-muted); font-weight: 400; }
+  .week-badge {
+    background: var(--purple-dim);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 999px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--purple-light);
+    white-space: nowrap;
+  }
+
+  /* ── TABS ── */
+  .tabs-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 97px;
+    z-index: 99;
+  }
+  .tabs-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    top: 1px;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--purple-light);
+    border-bottom-color: var(--purple);
+    font-weight: 600;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 32px 64px;
+  }
+
+  /* ── TAB PANELS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 24px;
+  }
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 30%, var(--purple-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .section-header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* ── METRIC CARDS ── */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .metric-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.13); }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .metric-card.purple::before { background: linear-gradient(90deg, var(--purple), var(--purple-light)); }
+  .metric-card.emerald::before { background: linear-gradient(90deg, var(--emerald), #34d399); }
+  .metric-card.rose::before { background: linear-gradient(90deg, var(--rose), #fb7185); }
+  .metric-card.amber::before { background: linear-gradient(90deg, var(--amber), #fbbf24); }
+  .metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .metric-value {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .metric-card.purple .metric-value { color: var(--purple-light); }
+  .metric-card.emerald .metric-value { color: var(--emerald); }
+  .metric-card.rose .metric-value { color: var(--rose); }
+  .metric-card.amber .metric-value { color: var(--amber); }
+  .metric-sub { font-size: 0.78rem; color: var(--text-dim); }
+  .metric-icon {
+    position: absolute;
+    top: 20px; right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.25;
+  }
+
+  /* ── AT-RISK BADGE ── */
+  .at-risk-banner {
+    background: linear-gradient(135deg, rgba(244,63,94,0.15), rgba(244,63,94,0.05));
+    border: 1px solid rgba(244,63,94,0.35);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fda4af;
+  }
+  .at-risk-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rose);
+    animation: pulse 1.5s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(244,63,94,0.5); }
+    50% { box-shadow: 0 0 0 6px rgba(244,63,94,0); }
+  }
+
+  /* ── CHART CARDS ── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 900px) {
+    .chart-grid { grid-template-columns: 1fr; }
+  }
+  .chart-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .chart-card h3 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .chart-wrap { position: relative; }
+  .chart-wrap.bar-wrap { height: 280px; }
+  .chart-wrap.donut-wrap { height: 260px; }
+
+  /* ── DETAIL CARDS ── */
+  .detail-section { margin-bottom: 28px; }
+  .detail-section h3 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .detail-section h3 .count-badge {
+    background: var(--bg4);
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 0.75rem;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .student-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    transition: border-color 0.2s;
+  }
+  .student-card:hover { border-color: rgba(255,255,255,0.14); }
+  .student-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; }
+  .student-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .tag.program { background: var(--purple-dim); color: var(--purple-light); border: 1px solid rgba(124,58,237,0.25); }
+  .tag.payment { background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
+  .tag.enroll { background: var(--emerald-dim); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+  .tag.stage { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.25); }
+  .tag.placed { background: var(--emerald-dim); color: var(--emerald); border: 1px solid rgba(16,185,129,0.3); }
+  .tag.ntbp { background: rgba(244,63,94,0.1); color: #fda4af; border: 1px solid rgba(244,63,94,0.25); }
+
+  .empty-state {
+    background: var(--bg3);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.875rem;
+  }
+  .empty-state span { display: block; font-size: 2rem; margin-bottom: 10px; }
+
+  /* ── PAYMENT / ENROLLMENT DIST CARDS ── */
+  .dist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .dist-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .dist-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 0 0 var(--radius) var(--radius);
+  }
+  .dist-card.c1::after { background: var(--purple); }
+  .dist-card.c2::after { background: var(--blue); }
+  .dist-card.c3::after { background: var(--emerald); }
+  .dist-card.c4::after { background: var(--amber); }
+  .dist-card-label { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 12px; }
+  .dist-card-count { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 4px; }
+  .dist-card.c1 .dist-card-count { color: var(--purple-light); }
+  .dist-card.c2 .dist-card-count { color: #93c5fd; }
+  .dist-card.c3 .dist-card-count { color: var(--emerald); }
+  .dist-card.c4 .dist-card-count { color: var(--amber); }
+  .dist-card-pct { font-size: 0.85rem; color: var(--text-dim); font-weight: 500; }
+
+  /* ── STACKED BAR SECTION ── */
+  .stacked-section { margin-bottom: 28px; }
+  .stacked-section h3 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .stacked-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .stacked-chart-wrap { height: 200px; position: relative; }
+
+  /* ── ANALYSIS TAB ── */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 720px) { .analysis-grid { grid-template-columns: 1fr; } }
+  .insight-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .insight-card h3 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .insight-value {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+  .insight-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+  .insight-card.flag {
+    border-color: rgba(16,185,129,0.3);
+    background: linear-gradient(135deg, rgba(16,185,129,0.06), var(--bg2));
+  }
+  .insight-card.flag .insight-value { color: var(--emerald); }
+  .insight-card.purple-card {
+    border-color: rgba(124,58,237,0.3);
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), var(--bg2));
+  }
+  .insight-card.purple-card .insight-value { color: var(--purple-light); }
+  .insight-card.amber-card {
+    border-color: rgba(245,158,11,0.3);
+    background: linear-gradient(135deg, rgba(245,158,11,0.07), var(--bg2));
+  }
+  .insight-card.amber-card .insight-value { color: var(--amber); }
+  .insight-card.blue-card {
+    border-color: rgba(59,130,246,0.3);
+    background: linear-gradient(135deg, rgba(59,130,246,0.07), var(--bg2));
+  }
+  .insight-card.blue-card .insight-value { color: #93c5fd; }
+
+  .summary-card {
+    background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(16,185,129,0.07));
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .summary-card h3 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--purple-light);
+    margin-bottom: 14px;
+  }
+  .summary-card p { font-size: 0.92rem; line-height: 1.75; color: var(--text); }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .kpi-pill-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-dim); }
+  .kpi-pill-value { font-size: 1.1rem; font-weight: 800; }
+  .kpi-pill.p { .kpi-pill-value { color: var(--purple-light); } }
+  .kpi-pill.e { .kpi-pill-value { color: var(--emerald); } }
+  .kpi-pill.a { .kpi-pill-value { color: var(--amber); } }
+
+  .progress-bar-wrap { margin-top: 10px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+  .progress-track { height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; color: var(--text-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .top-banner { padding: 20px 20px 16px; }
+    .tabs-inner { padding: 0 16px; }
+    .main { padding: 20px 16px 48px; }
+    .chart-grid { grid-template-columns: 1fr; }
+    .tab-btn { padding: 12px 14px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BANNER -->
+<header class="top-banner">
+  <div class="banner-inner">
+    <div class="logo-block">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <h1>GeekForce USA</h1>
+        <span>Placement Intelligence Dashboard</span>
+      </div>
+    </div>
+    <div class="week-badge">📅 May 4 – May 10, 2026</div>
+  </div>
+</header>
+
+<!-- TABS BAR -->
+<nav class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="payment">Payment Plans</button>
+    <button class="tab-btn" data-tab="enrollment">Enrollment</button>
+    <button class="tab-btn" data-tab="analysis">Analysis</button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ══════════════════════════════════════════ TAB 1: OVERVIEW ══ -->
+  <section class="tab-panel active" id="tab-overview">
+
+    <div class="section-header">
+      <h2>Weekly Placement Report</h2>
+      <p>May 4 – May 10, 2026 &nbsp;·&nbsp; Generated May 11, 2026 &nbsp;·&nbsp; 60 active students tracked</p>
+    </div>
+
+    <!-- METRIC CARDS -->
+    <div class="metric-grid">
+      <div class="metric-card purple">
+        <div class="metric-icon">🎯</div>
+        <div class="metric-label">Active Pipeline</div>
+        <div class="metric-value">60</div>
+        <div class="metric-sub">Students in placement process</div>
+      </div>
+      <div class="metric-card emerald">
+        <div class="metric-icon">✅</div>
+        <div class="metric-label">Placed This Week</div>
+        <div class="metric-value">0</div>
+        <div class="metric-sub">New placements confirmed</div>
+      </div>
+      <div class="metric-card rose">
+        <div class="metric-icon">🚫</div>
+        <div class="metric-label">Not to Be Placed</div>
+        <div class="metric-value">0</div>
+        <div class="metric-sub">Withdrawn or disqualified</div>
+      </div>
+      <div class="metric-card amber">
+        <div class="metric-icon">📊</div>
+        <div class="metric-label">Placement Rate</div>
+        <div class="metric-value">0.0<span style="font-size:1.2rem">%</span></div>
+        <div class="metric-sub">Week-over-week performance</div>
+      </div>
+    </div>
+
+    <!-- CHARTS GRID -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Stage Distribution</h3>
+        <div class="chart-wrap bar-wrap">
+          <canvas id="stageBarChart"></canvas>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Stage 1</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>Stage 2</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Stage 3</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>To Start</div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Program Distribution</h3>
+        <div class="chart-wrap donut-wrap">
+          <canvas id="programDonutChart"></canvas>
+        </div>
+        <div class="legend" style="justify-content:center; margin-top: 12px;">
+          <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Full-Stack (49)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Data Sci & ML (8)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Cybersec (3)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACED STUDENTS -->
+    <div class="detail-section">
+      <h3>✅ Placed Students <span class="count-badge">0</span></h3>
+      <div class="empty-state">
+        <span>🎯</span>
+        No placements recorded this week. Keep pushing — Stage 3 students are ready!
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- NTBP STUDENTS -->
+    <div class="detail-section">
+      <h3>🚫 Not to Be Placed <span class="count-badge">0</span></h3>
+      <div class="empty-state">
+        <span>✨</span>
+        No students flagged as Not to Be Placed this week. Great retention!
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════ TAB 2: PAYMENT PLANS ══ -->
+  <section class="tab-panel" id="tab-payment">
+
+    <div class="section-header">
+      <h2>Payment Plan Analysis</h2>
+      <p>Breakdown of 60 students across MTC, TWC, and Out of Pocket plans</p>
+    </div>
+
+    <div class="dist-grid">
+      <div class="dist-card c1">
+        <div class="dist-card-label">MTC</div>
+        <div class="dist-card-count">10</div>
+        <div class="dist-card-pct">16.7% of cohort</div>
+      </div>
+      <div class="dist-card c2">
+        <div class="dist-card-label">TWC</div>
+        <div class="dist-card-count">15</div>
+        <div class="dist-card-pct">25.0% of cohort</div>
+      </div>
+      <div class="dist-card c3">
+        <div class="dist-card-label">Out of Pocket</div>
+        <div class="dist-card-count">35</div>
+        <div class="dist-card-pct">58.3% of cohort</div>
+      </div>
+    </div>
+
+    <!-- Progress bars per plan -->
+    <div class="stacked-card" style="margin-bottom: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <div class="progress-label"><span>MTC (10 students)</span><span style="color: var(--purple-light)">16.7%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:16.7%; background: var(--purple);"></div></div>
+        </div>
+        <div>
+          <div class="progress-label"><span>TWC (15 students)</span><span style="color: #93c5fd">25.0%</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:25%; background: var(--blue);"></div
