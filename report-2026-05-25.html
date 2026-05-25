@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeekForce USA – Weekly Report | May 18 – May 24, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f1a;
+    --bg2: #16162a;
+    --bg3: #1e1e35;
+    --bg4: #252540;
+    --purple: #7c3aed;
+    --purple-light: #9d6ef5;
+    --purple-dim: #3d1f7a;
+    --emerald: #10b981;
+    --emerald-dim: #064e38;
+    --amber: #f59e0b;
+    --rose: #f43f5e;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --border: #2a2a4a;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a0a35 50%, #0f0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -40px;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-icon {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+  }
+  .header-title { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }
+  .header-title span { color: var(--purple-light); }
+  .header-sub { font-size: 13px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+  .week-badge {
+    background: linear-gradient(135deg, var(--purple-dim), #1e1e35);
+    border: 1px solid var(--purple);
+    border-radius: 20px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--purple-light);
+    white-space: nowrap;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-wrap {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    padding: 16px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+  .tab-btn:hover { color: var(--text); background: rgba(124,58,237,0.06); }
+  .tab-btn.active {
+    color: var(--purple-light);
+    border-bottom-color: var(--purple);
+    background: rgba(124,58,237,0.1);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* ── TAB PANELS ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .section-head h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-head .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--purple);
+    box-shadow: 0 0 8px var(--purple);
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 32px 0;
+  }
+
+  /* ── METRIC CARDS ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 900px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .metrics-grid { grid-template-columns: 1fr; } }
+
+  .metric-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .metric-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent, var(--purple));
+  }
+  .metric-card.c-emerald { --accent: var(--emerald); }
+  .metric-card.c-rose { --accent: var(--rose); }
+  .metric-card.c-amber { --accent: var(--amber); }
+  .metric-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+  .metric-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .metric-value.c-emerald { color: var(--emerald); }
+  .metric-value.c-rose { color: var(--rose); }
+  .metric-value.c-amber { color: var(--amber); }
+  .metric-sub {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+  .metric-icon {
+    position: absolute;
+    top: 18px; right: 18px;
+    font-size: 28px;
+    opacity: 0.18;
+  }
+
+  /* ── AT-RISK BADGE ── */
+  .at-risk-banner {
+    background: linear-gradient(135deg, rgba(244,63,94,0.12), rgba(244,63,94,0.06));
+    border: 1px solid rgba(244,63,94,0.4);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f87171;
+  }
+  .at-risk-banner .pulse {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--rose);
+    box-shadow: 0 0 0 0 var(--rose);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(244,63,94,0.6); }
+    70% { box-shadow: 0 0 0 8px rgba(244,63,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(244,63,94,0); }
+  }
+
+  /* ── CHARTS GRID ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+
+  .chart-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .chart-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 20px;
+  }
+  .chart-wrap { position: relative; }
+  .chart-wrap.donut-wrap { max-height: 260px; display: flex; justify-content: center; }
+
+  /* ── STUDENT DETAIL CARDS ── */
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .student-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    border-left: 4px solid var(--purple);
+    transition: transform 0.15s;
+  }
+  .student-card:hover { transform: translateX(3px); }
+  .student-card.ntbp { border-left-color: var(--rose); }
+  .student-name { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .student-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .stag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+  .stag-program { background: rgba(124,58,237,0.2); color: #b899ff; }
+  .stag-payment { background: rgba(16,185,129,0.15); color: #34d399; }
+  .stag-enrollment { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .stag-stage { background: rgba(245,158,11,0.15); color: #fcd34d; }
+
+  .empty-state {
+    background: var(--bg2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .empty-state .e-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── PAYMENT PLAN CARDS ── */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .payment-grid { grid-template-columns: 1fr; } }
+
+  .pay-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .pay-card:hover { transform: translateY(-2px); }
+  .pay-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--pay-color, var(--purple));
+  }
+  .pay-card.mtc { --pay-color: var(--purple); }
+  .pay-card.twc { --pay-color: var(--cyan); }
+  .pay-card.oop { --pay-color: var(--emerald); }
+  .pay-label { font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+  .pay-count { font-size: 40px; font-weight: 800; }
+  .pay-card.mtc .pay-count { color: var(--purple-light); }
+  .pay-card.twc .pay-count { color: var(--cyan); }
+  .pay-card.oop .pay-count { color: var(--emerald); }
+  .pay-pct { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+  .pay-bar {
+    margin-top: 12px;
+    height: 6px;
+    background: var(--bg4);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .pay-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--pay-color, var(--purple));
+    transition: width 1s ease;
+  }
+
+  /* ── ENROLLMENT CARDS ── */
+  .enroll-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 700px) { .enroll-grid { grid-template-columns: 1fr; } }
+
+  .enroll-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s;
+  }
+  .enroll-card:hover { transform: translateY(-2px); }
+  .enroll-icon { font-size: 32px; }
+  .enroll-info { flex: 1; }
+  .enroll-name { font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; }
+  .enroll-count { font-size: 28px; font-weight: 800; }
+  .enroll-pct { font-size: 12px; color: var(--text-dim); }
+  .enroll-card.active-group { border-color: var(--purple); background: rgba(124,58,237,0.06); }
+  .enroll-card.active-group .enroll-count { color: var(--purple-light); }
+
+  /* ── ANALYSIS TAB ── */
+  .analysis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 768px) { .analysis-grid { grid-template-columns: 1fr; } }
+
+  .insight-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .insight-card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .insight-card h3 .i-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--purple);
+  }
+
+  .insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .insight-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .insight-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .insight-text strong { color: var(--text); }
+
+  .summary-card {
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(16,185,129,0.05));
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .summary-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .summary-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) { .kpi-row { grid-template-columns: 1fr; } }
+
+  .kpi-mini {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi-mini-val { font-size: 28px; font-weight: 800; color: var(--purple-light); }
+  .kpi-mini-label { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.6px; margin-top: 4px; }
+
+  /* ── STAGE LEGEND ── */
+  .stage-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── PROGRESS BAR ROWS ── */
+  .prog-row {
+    margin-bottom: 14px;
+  }
+  .prog-row-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .prog-track {
+    height: 10px;
+    background: var(--bg4);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s ease;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--purple-dim); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="logo-icon">⚡</div>
+      <div>
+        <div class="header-title">GeekForce <span>USA</span></div>
+        <div class="header-sub">Placement Intelligence Dashboard · Weekly Report</div>
+      </div>
+    </div>
+    <div class="week-badge">📅 May 18 – May 24, 2026</div>
+  </div>
+</header>
+
+<!-- NAV TABS -->
+<nav class="nav-wrap">
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="switchTab('overview', this)">📊 Overview</button>
+    <button class="tab-btn" onclick="switchTab('payment', this)">💳 Payment Plans</button>
+    <button class="tab-btn" onclick="switchTab('enrollment', this)">🎓 Enrollment</button>
+    <button class="tab-btn" onclick="switchTab('analysis', this)">🔍 Analysis</button>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- ══════════════════════════════════════════
+       TAB 1: OVERVIEW
+  ══════════════════════════════════════════ -->
+  <div id="tab-overview" class="tab-panel active">
+
+    <div class="section-head">
+      <div class="dot"></div>
+      <h2>Pipeline Overview · Week of May 18 – May 24, 2026</h2>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">🚀</div>
+        <div class="metric-label">Active Pipeline</div>
+        <div class="metric-value">56</div>
+        <div class="metric-sub">Total students tracked</div>
+      </div>
+      <div class="metric-card c-emerald">
+        <div class="metric-icon">✅</div>
+        <div class="metric-label">Placed This Week</div>
+        <div class="metric-value c-emerald">0</div>
+        <div class="metric-sub">New placements</div>
+      </div>
+      <div class="metric-card c-rose">
+        <div class="metric-icon">🚫</div>
+        <div class="metric-label">Not to Be Placed</div>
+        <div class="metric-value c-rose">0</div>
+        <div class="metric-sub">Disqualified this week</div>
+      </div>
+      <div class="metric-card c-amber">
+        <div class="metric-icon">📈</div>
+        <div class="metric-label">Placement Rate</div>
+        <div class="metric-value c-amber">0.0%</div>
+        <div class="metric-sub">Of active pipeline</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>📊 Stage Distribution</h3>
+        <div class="chart-wrap" style="height:220px;">
+          <canvas id="stageBarChart"></canvas>
+        </div>
+        <div class="stage-legend" id="stageLegend"></div>
+      </div>
+      <div class="chart-card">
+        <h3>🎯 Program Distribution</h3>
+        <div class="chart-wrap donut-wrap" style="height:220px;">
+          <canvas id="programDonut"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage Progress Breakdown -->
+    <div class="chart-card" style="margin-bottom:28px;">
+      <h3>📉 Stage Progress Breakdown</h3>
+      <div style="margin-top:8px;">
+        <div class="prog-row">
+          <div class="prog-row-label"><span>Stage 2 in Progress</span><span>23 students (41.1%)</span></div>
+          <div class="prog-track"><div class="prog-fill" style="width:41.1%;background:#7c3aed;"></div></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-row-label"><span>Stage 1 in Progress</span><span>14 students (25.0%)</span></div>
+          <div class="prog-track"><div class="prog-fill" style="width:25%;background:#3b82f6;"></div></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-row-label"><span>Stage 3 in Progress</span><span>14 students (25.0%)</span></div>
+          <div class="prog-track"><div class="prog-fill" style="width:25%;background:#10b981;"></div></div>
+        </div>
+        <div class="prog-row">
+          <div class="prog-row-label"><span>To Start</span><span>5 students (8.9%)</span></div>
+          <div class="prog-track"><div class="prog-fill" style="width:8.9%;background:#f59e0b;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Placed Students -->
+    <div class="section-head">
+      <div class="dot"></div>
+      <h2>✅ Placed Students This Week</h2>
+    </div>
+    <div style="margin-bottom:32px;">
+      <div class="empty-state">
+        <div class="e-icon">🎉</div>
+        <p>No placements recorded for this week.<br>Students continue progressing through the pipeline.</p>
+      </div>
+    </div>
+
+    <!-- NtbP Students -->
+    <div class="section-head">
+      <div class="dot"></div>
+      <h2>🚫 Not to Be Placed (NtbP)</h2>
+    </div>
+    <div>
+      <div class="empty-state">
+        <div class="e-icon">👍</div>
+        <p>No students marked as "Not to Be Placed" this week.<br>All 56 students remain in active pipeline.</p>
+      </div>
+    </div>
+
+  </div><!-- /tab-overview -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 2: PAYMENT PLANS
+  ══════════════════════════════════════════ -->
+  <div id="tab-payment" class="tab-panel">
+
+    <div class="section-head">
+      <div class="dot"></div>
+      <h2>💳 Payment Plan Distribution</h2>
+    </div>
+
+    <div class="payment-grid">
+      <div class="pay-card mtc">
+        <div class="pay-label">MTC</div>
+        <div class="pay-count">9</div>
+        <div class="pay-pct">16.1% of pipeline</div>
+        <div class="pay-bar"><div class="pay-bar-fill" style="width:16.1%"></div></div>
+      </div>
+      <div class="pay-card twc">
+        <div class="pay-label">TWC</div>
+        <div class="pay-count">15</div>
+        <div class="pay-pct">26.8% of pipeline</div>
+        <div class="pay-bar"><div class="pay-bar-fill" style="width:26.8%"></div></div>
+      </div>
+      <div class="pay-card oop">
+        <div class="pay-label">Out of Pocket</div>
+        <div class="pay-count">32</div>
+        <div class="pay-pct">57.1% of pipeline</div>
+        <div class="pay-bar"><div class="pay-bar-fill" style="width:57.1%"></div></div>
+      </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom:
