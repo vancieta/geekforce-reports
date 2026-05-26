@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeekForce — Upskill Track</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #2D7FF9;
+      --green: #059669;
+      --purple: #6C5CE7;
+      --red: #DC2626;
+      --amber: #D97706;
+      --text: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --surface: #F9FAFB;
+      --white: #FFFFFF;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -0.5px;
+    }
+    .header-divider {
+      width: 1px; height: 22px;
+      background: var(--border);
+    }
+    .header-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .header-badge {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.7px; text-transform: uppercase;
+      background: #EFF6FF; color: var(--blue);
+      border: 1px solid #BFDBFE;
+      border-radius: 99px;
+      padding: 3px 10px;
+    }
+    .header-date {
+      font-size: 12px; color: var(--text-muted);
+    }
+
+    /* ── Main layout ── */
+    .main { max-width: 960px; margin: 0 auto; padding: 36px 24px 60px; }
+
+    /* ── Stage overview card ── */
+    .stage-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+    }
+    .stage-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+      background: #EFF6FF; color: var(--blue);
+      border: 1px solid #BFDBFE;
+      border-radius: 99px; padding: 4px 12px;
+      margin-bottom: 14px;
+    }
+    .stage-name {
+      font-size: 26px; font-weight: 800; color: var(--text);
+      letter-spacing: -0.5px; margin-bottom: 8px;
+    }
+    .stage-desc {
+      font-size: 15px; color: var(--text-secondary);
+      line-height: 1.7; max-width: 720px; margin-bottom: 20px;
+    }
+    .pillars {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+    }
+    .pillar-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted); margin-bottom: 5px;
+    }
+    .pillar-val { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+
+    /* ── Flow diagram ── */
+    .flow-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      margin-bottom: 24px;
+    }
+    .flow-label-top {
+      font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--text-muted); margin-bottom: 14px;
+    }
+    .flow-row {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .flow-node {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      font-size: 12px; font-weight: 600; color: var(--text-secondary);
+      text-align: center; min-width: 110px;
+      background: var(--surface);
+    }
+    .flow-node-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-bottom: 3px; }
+    .flow-node.upskill {
+      background: #EFF6FF; border-color: #BFDBFE; color: var(--blue);
+    }
+    .flow-node.placed {
+      background: #ECFDF5; border-color: #A7F3D0; color: var(--green);
+    }
+    .flow-arrow { font-size: 16px; color: var(--text-muted); }
+    .flow-parallel-wrap {
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+    }
+    .flow-parallel-divider {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted);
+    }
+
+    /* ── Tabs ── */
+    .tabs-wrap {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .tabs-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 0 20px;
+      gap: 0;
+    }
+    .tab-btn {
+      padding: 14px 18px;
+      font-size: 13px; font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      transition: all .15s;
+      display: flex; align-items: center; gap: 7px;
+      user-select: none; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: inherit;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
+    .tab-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .tab-panel { display: none; padding: 28px 28px 32px; }
+    .tab-panel.active { display: block; }
+
+    .program-intro {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6; margin-bottom: 24px;
+    }
+    .program-intro strong { color: var(--text); font-weight: 600; }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
+      color: var(--text-muted); margin-bottom: 12px; margin-top: 4px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── Course cards ── */
+    .courses-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;
+    }
+    .course-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      position: relative;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .course-card:hover {
+      border-color: #D1D5DB;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+    }
+    .card-tags { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px;
+      padding: 3px 9px; border-radius: 99px;
+    }
+    .tag-4geeks { background: #DBEAFE; color: #1D4ED8; }
+    .tag-external { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+    .tag-free { background: #D1FAE5; color: #065F46; }
+    .tag-paid { background: #FEF3C7; color: #92400E; }
+    .tag-freepaid { background: #EDE9FE; color: #5B21B6; }
+    .must-badge {
+      position: absolute; top: 14px; right: 14px;
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      background: #FEE2E2; color: #B91C1C;
+      border-radius: 99px; padding: 3px 8px;
+    }
+    .course-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; line-height: 1.3; }
+    .course-platform { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .course-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 10px; }
+    .course-why {
+      font-size: 12px; color: var(--text-secondary);
+      background: var(--surface); border-radius: 6px;
+      padding: 8px 10px; line-height: 1.5;
+      border-left: 3px solid var(--border);
+    }
+    .course-why strong { color: var(--text); font-weight: 600; }
+
+    /* ── Advisor rules ── */
+    .rules-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-top: 24px;
+    }
+    .rules-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .rule-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .rule-num {
+      min-width: 24px; height: 24px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 11px; font-weight: 700; color: var(--text-secondary);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      font-size: 12px; color: var(--text-muted);
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 640px) {
+      .header { padding: 14px 16px; }
+      .main { padding: 20px 16px 48px; }
+      .pillars { grid-template-columns: 1fr; }
+      .courses-grid { grid-template-columns: 1fr; }
+      .tabs-bar { overflow-x: auto; }
+      .tab-btn { padding: 12px 12px; font-size: 12px; white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">4Geeks</div>
+      <div class="header-divider"></div>
+      <div class="header-title">GeekForce — Upskill Track</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="header-badge">Internal Spec</span>
+      <span class="header-date" id="doc-date"></span>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Stage overview -->
+    <div class="stage-card">
+      <div class="stage-pill">⟳ Parallel Track · Longitudinal</div>
+      <div class="stage-name">Upskill Track — Stay Competitive</div>
+      <div class="stage-desc">A continuous learning track that runs in parallel with Stages 1–3, starting the day a student graduates until they land a job. Students are expected to complete at least 4 courses from their program track during the active job search period to stay sharp, relevant, and hireable in a fast-moving market.</div>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-label">When it starts</div>
+          <div class="pillar-val">Graduation day — simultaneously with Stage 1</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">When it ends</div>
+          <div class="pillar-val">Job placement confirmed</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">Minimum requirement</div>
+          <div class="pillar-val">4 courses completed from the program track</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow -->
+    <div class="flow-card">
+      <div class="flow-label-top">How the track fits into GeekForce</div>
+      <div class="flow-row">
+        <div class="flow-node">
+          <div class="flow-node-label">Milestone</div>
+          Graduation
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-parallel-wrap">
+          <div class="flow-node" style="min-width:150px">
+            <div class="flow-node-label">Stages 1 → 2 → 3</div>
+            GeekForce Career
+          </div>
+          <div class="flow-parallel-divider">runs in parallel ↕</div>
+          <div class="flow-node upskill" style="min-width:150px">
+            <div class="flow-node-label">Upskill Track</div>
+            Stay Competitive
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node placed">
+          <div class="flow-node-label">Outcome</div>
+          Placed ✓
+        </div>
+      </div>
+    </div>
+
+    <!-- Program tabs -->
+    <div class="tabs-wrap">
+      <div class="tabs-bar">
+        <button class="tab-btn active" onclick="switchTab('fs', this)">
+          <span class="tab-dot" style="background:#059669"></span> Full-Stack
+        </button>
+        <button class="tab-btn" onclick="switchTab('ds', this)">
+          <span class="tab-dot" style="background:#7C3AED"></span> Data Science & ML
+        </button>
+        <button class="tab-btn" onclick="switchTab('cy', this)">
+          <span class="tab-dot" style="background:#DC2626"></span> Cybersecurity
+        </button>
+        <button class="tab-btn" onclick="switchTab('ai', this)">
+          <span class="tab-dot" style="background:#2D7FF9"></span> AI Engineering
+        </button>
+      </div>
+
+      <!-- FULL-STACK -->
+      <div class="tab-panel active" id="panel-fs">
+        <div class="program-intro">
+          <strong>Full-Stack graduates</strong> need to differentiate by integrating AI into their workflow. Employers in 2026 expect developers who can vibe code with AI tools, deploy to the cloud, and work across the stack. Priority: AI-assisted development + a recognized cloud credential.
+        </div>
+
+        <div class="section-label">4Geeks courses — available on 4geeks.com</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">Vibe Coding with AI</div>
+            <div class="course-platform">4geeks.com · Beginner · 10 modules</div>
+            <div class="course-desc">Build real projects from day one using AI coding assistants — Cursor, Copilot, Windsurf. The fastest-growing skill in dev hiring right now.</div>
+            <div class="course-why"><strong>Why now:</strong> "Vibe coding" is the #1 trending search in tech hiring. Full-stack devs who can't use AI tools are already behind.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">Applied AI</div>
+            <div class="course-platform">4geeks.com · Intermediate · 12 modules</div>
+            <div class="course-desc">Generative AI for professionals — automation, content pipelines, integrating LLMs into apps. Directly applicable to full-stack projects.</div>
+            <div class="course-why"><strong>Why now:</strong> Full-stack roles increasingly require LLM API integration. This gives grads practical applied skills, not just theory.</div>
+          </div>
+        </div>
+
+        <div class="section-label">External courses</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free to study · ~$100 exam</span>
+            </div>
+            <div class="course-title">AWS Cloud Practitioner Essentials</div>
+            <div class="course-platform">AWS Skill Builder · Self-paced · ~6 hours</div>
+            <div class="course-desc">Official AWS fundamentals course. Prepares for the CLF-C02 certification — one of the most requested entry-level credentials in job postings.</div>
+            <div class="course-why"><strong>Why now:</strong> Cloud is no longer optional for full-stack. AWS appears in 65%+ of full-stack job listings. Free to study, ~$100 to certify.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-paid">Paid · ~$40/mo</span>
+            </div>
+            <div class="course-title">Meta Front-End Developer Certificate</div>
+            <div class="course-platform">Coursera · Intermediate · 9 courses</div>
+            <div class="course-desc">React, UX/UI, version control, testing. Issued by Meta — strong brand signal for recruiters and fully recognized in Coursera's employer partner network.</div>
+            <div class="course-why"><strong>Why now:</strong> A named certificate from a recognizable tech brand on LinkedIn is a hiring signal. 4Geeks + Meta cert = credibility stack.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">TypeScript — Microsoft Learn</div>
+            <div class="course-platform">Microsoft Learn · Beginner → Advanced · Self-paced</div>
+            <div class="course-desc">Official Microsoft TypeScript learning path. TypeScript appears in 80%+ of full-stack job descriptions — it's now the default language standard in modern teams.</div>
+            <div class="course-why"><strong>Why now:</strong> Most 4Geeks grads learn JavaScript. TypeScript fluency closes the biggest skill gap and shows immediately on GitHub.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA SCIENCE -->
+      <div class="tab-panel" id="panel-ds">
+        <div class="program-intro">
+          <strong>Data Science & ML graduates</strong> need to bridge the gap between classical ML and the current AI landscape. Employers want practitioners who understand deep learning, can run experiments on real data, and increasingly use LLMs in their pipelines. Priority: hands-on practice + a recognized credential.
+        </div>
+
+        <div class="section-label">4Geeks courses — available on 4geeks.com</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">Applied AI</div>
+            <div class="course-platform">4geeks.com · Intermediate · 12 modules</div>
+            <div class="course-desc">Generative AI tools for automation and content pipelines. Directly extends a DS/ML background into the current AI product ecosystem.</div>
+            <div class="course-why"><strong>Why now:</strong> Data roles are merging with AI engineering. DS grads who understand LLM-based pipelines are far more hireable in 2026.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">Deep Dive into Python</div>
+            <div class="course-platform">4geeks.com · Beginner → Intermediate · 14 modules</div>
+            <div class="course-desc">Advanced Python patterns — decorators, generators, async, performance. Reinforces the foundation every data role expects at technical interviews.</div>
+            <div class="course-why"><strong>Why now:</strong> Technical interviews for DS roles test Python deeply. This course closes the gap between "I use Python" and "I know Python."</div>
+          </div>
+        </div>
+
+        <div class="section-label">External courses</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">Practical Deep Learning for Coders</div>
+            <div class="course-platform">fast.ai · Advanced · ~14 weeks self-paced</div>
+            <div class="course-desc">Jeremy Howard's renowned bottom-up course covering CNNs, NLP, tabular models, and deployment with real PyTorch. One of the most respected free ML resources available.</div>
+            <div class="course-why"><strong>Why now:</strong> fast.ai signals serious ML commitment. Employers and hiring managers at ML-first teams know and respect this course by name.</div>
+          </div>
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">Kaggle Learn + Competitions</div>
+            <div class="course-platform">Kaggle · Beginner → Advanced · On demand</div>
+            <div class="course-desc">Micro-courses on SQL, ML, feature engineering, NLP, and computer vision — plus active competition participation to build a public Kaggle ranking.</div>
+            <div class="course-why"><strong>Why now:</strong> A Kaggle profile with submissions is a stronger portfolio signal than a GitHub repo for data roles. Recruiters check it.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-paid">Paid · ~$40/mo</span>
+            </div>
+            <div class="course-title">Google Advanced Data Analytics Certificate</div>
+            <div class="course-platform">Coursera · Advanced · 6-course program</div>
+            <div class="course-desc">Statistics, regression, ML with Python, and Tableau. Google-branded credential with a high employer recognition rate in the US market.</div>
+            <div class="course-why"><strong>Why now:</strong> Google cert + 4Geeks bootcamp is a powerful resume combination for data analyst and data scientist roles in the US.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CYBERSECURITY -->
+      <div class="tab-panel" id="panel-cy">
+        <div class="program-intro">
+          <strong>Cybersecurity graduates</strong> need certifications more than any other program — the cyber job market is one of the most credential-driven sectors. CompTIA Security+ is non-negotiable for most entry-level roles and required by DoD contractors. Priority: cert prep + hands-on labs.
+        </div>
+
+        <div class="section-label">4Geeks courses — available on 4geeks.com</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">AI Fluency</div>
+            <div class="course-platform">4geeks.com · Beginner · 4 modules</div>
+            <div class="course-desc">AI prompting, automation tools, and assistant workflows. AI is rapidly entering the security stack — threat detection, incident response, and SOC tools now use LLMs.</div>
+            <div class="course-why"><strong>Why now:</strong> AI-powered threat detection is in every major SIEM platform. Cyber grads who understand AI workflows stand out in SOC and analyst roles.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">No-Code & Automations</div>
+            <div class="course-platform">4geeks.com · Beginner · 8 modules</div>
+            <div class="course-desc">n8n, Zapier, and workflow automation without code. Security analysts use automation for alert triage, incident workflows, and reporting pipelines.</div>
+            <div class="course-why"><strong>Why now:</strong> Automation literacy separates L1 from L2 analysts. Grads who can build response playbooks are immediately more valuable to security teams.</div>
+          </div>
+        </div>
+
+        <div class="section-label">External courses</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-paid">Paid · ~$392 exam</span>
+            </div>
+            <div class="course-title">CompTIA Security+</div>
+            <div class="course-platform">CompTIA · Industry certification · SY0-701</div>
+            <div class="course-desc">The gold standard entry-level security certification. Required by the US DoD (8140) and listed in 75%+ of entry cyber job postings. Study for free via Professor Messer or Jason Dion (Udemy ~$15 on sale).</div>
+            <div class="course-why"><strong>Why now:</strong> Without Security+, many cyber grads can't apply to government-adjacent roles. This is the single most impactful investment a cyber grad can make.</div>
+          </div>
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-freepaid">Free tier + Paid ~$14/mo</span>
+            </div>
+            <div class="course-title">TryHackMe</div>
+            <div class="course-platform">TryHackMe.com · Beginner → Advanced · Gamified labs</div>
+            <div class="course-desc">Browser-based hacking labs — networking, web exploits, privilege escalation, forensics. Structured paths for SOC Analyst, Penetration Tester, and Security Engineer roles.</div>
+            <div class="course-why"><strong>Why now:</strong> A TryHackMe profile with completed paths is one of the strongest portfolio signals for cyber roles. Recruiters in cyber actually look at it.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">ISC2 Certified in Cybersecurity (CC)</div>
+            <div class="course-platform">ISC2.org · Entry-level cert · Free exam</div>
+            <div class="course-desc">ISC2's entry-level certification with free online training and a currently free exam. Strong brand — same org as CISSP. Great credential to add before Security+ is ready.</div>
+            <div class="course-why"><strong>Why now:</strong> Two certs (ISC2 CC + CompTIA Security+) is a powerful combination for a bootcamp grad. ISC2 CC is achievable in weeks and completely free right now.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI ENGINEERING -->
+      <div class="tab-panel" id="panel-ai">
+        <div class="program-intro">
+          <strong>AI Engineering graduates</strong> are entering the hottest and most competitive segment of the tech market. To stand out, they need to go deeper on the specific tools employers are actually using: RAG pipelines, agents, LangChain, fine-tuning. Priority: specialization in LLM tooling + community visibility.
+        </div>
+
+        <div class="section-label">4Geeks courses — available on 4geeks.com</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">Prompt Engineering</div>
+            <div class="course-platform">4geeks.com · Beginner · 8 modules</div>
+            <div class="course-desc">Chain of thought, few-shot, persona design, and advanced prompt patterns. Foundational for every AI Engineering role — both building and evaluating LLM systems.</div>
+            <div class="course-why"><strong>Why now:</strong> "Prompt engineering" is the #1 listed skill in AI job descriptions right now. Grads need to demonstrate it technically in interviews.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-4geeks">4Geeks</span>
+              <span class="tag tag-paid">Paid · $30–40/mo</span>
+            </div>
+            <div class="course-title">No-Code & Automations</div>
+            <div class="course-platform">4geeks.com · Beginner · 8 modules</div>
+            <div class="course-desc">n8n workflow automation, Zapier, and no-code AI pipelines. Many AI engineering roles involve orchestrating tools and integrations — not just writing models.</div>
+            <div class="course-why"><strong>Why now:</strong> AI Engineering is increasingly about orchestration. n8n is the fastest-growing workflow tool — grads who know it fill a real hiring gap.</div>
+          </div>
+        </div>
+
+        <div class="section-label">External courses</div>
+        <div class="courses-grid">
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">DeepLearning.AI Short Courses</div>
+            <div class="course-platform">deeplearning.ai · Short courses · Self-paced</div>
+            <div class="course-desc">Andrew Ng's bite-sized courses: RAG with LangChain, AI Agents, LLM fine-tuning, vector databases, and multimodal AI. New courses drop monthly — each is 1–3 hours and free.</div>
+            <div class="course-why"><strong>Why now:</strong> These are the most cited upskilling resources in AI engineering communities. Grads who haven't done them are at a disadvantage in interviews.</div>
+          </div>
+          <div class="course-card">
+            <span class="must-badge">Must-do</span>
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">Hugging Face NLP Course</div>
+            <div class="course-platform">huggingface.co/learn · Intermediate · Self-paced</div>
+            <div class="course-desc">Transformer models, tokenizers, fine-tuning, and the Hugging Face Hub. Official course from the team behind the most widely used AI model library.</div>
+            <div class="course-why"><strong>Why now:</strong> Hugging Face is the GitHub of AI. A completed HF course + projects hosted on the Hub is one of the strongest portfolio signals for AI roles.</div>
+          </div>
+          <div class="course-card">
+            <div class="card-tags">
+              <span class="tag tag-external">External</span>
+              <span class="tag tag-free">Free</span>
+            </div>
+            <div class="course-title">LangChain Academy</div>
+            <div class="course-platform">academy.langchain.com · Beginner → Intermediate</div>
+            <div class="course-desc">Official LangChain courses covering chains, agents, RAG, and LangGraph. LangChain is the dominant framework for LLM-powered application development.</div>
+            <div class="course-why"><strong>Why now:</strong> LangChain is listed in the majority of AI Engineering job descriptions. Grads who can build agents and RAG pipelines have a direct technical edge.</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- end tabs-wrap -->
+
+    <!-- Advisor rules -->
+    <div class="rules-card">
+      <div class="rules-title">Advisor rules & tracking</div>
+      <div class="rule-item">
+        <div class="rule-num">1</div>
+        <div>At onboarding (Stage 1 kickoff), advisors assign each student their program track and share the 4-course minimum list. Students should select their 4 courses by Week 2 of GeekForce.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">2</div>
+        <div>Progress is logged in the student's file. Completed courses and certifications are added to the resume and LinkedIn profile as part of Stage 1 profile optimization.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">3</div>
+        <div>At each biweekly Stage 3 check-in, advisors review Upskill Track progress. Non-progress is flagged — a student not upskilling has less to show recruiters and their competitiveness drops week over week.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">4</div>
+        <div>Certifications (Security+, AWS CLF, ISC2 CC, Google Advanced Analytics) are treated as priority completions — they unlock job applications that would otherwise be closed to the student.</div>
+      </div>
+      <div class="rule-item">
+        <div class="rule-num">5</div>
+        <div>4Geeks courses on 4geeks.com are the preferred starting point for budget-sensitive students. External free courses are the next default before paid external options.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    GeekForce USA · Upskill Track Spec · Prepared by Valentina Ancieta, Workforce Development Manager
+  </footer>
+
+  <script>
+    document.getElementById('doc-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    function switchTab(prog, btn) {
+      document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + prog).classList.add('active');
+    }
+  </script>
+</body>
+</html>
